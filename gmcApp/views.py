@@ -2,6 +2,7 @@
 from datetime import datetime
 from flask import Flask, render_template,request,send_file
 import latex.backtracking.backtracking_1step_booklet_maker as backtrack
+import latex.backtracking.backtracking_2step_booklet_maker as backtrack2
 import latex.numberlines.number_lines_booklet_maker as numline
 
 app = Flask(__name__)
@@ -36,6 +37,25 @@ def btonestepcreate():
     operation = ops[request.args.get('operation')]
     num_q=int(request.args.get('num_q'))
     file=backtrack.create_booklet(num_q,operation)
+    return send_file(file, as_attachment=True)
+
+
+
+@app.route('/bttwostep')
+def bttwostep():
+    return render_template(
+        'genform2.html',
+        title="Two-Step Backtracking",
+        ops=ops.keys(),
+        link="/bttwostepcreate",
+    )
+
+@app.route('/bttwostepcreate')
+def bttwostepcreate():
+    operation = ops[request.args.get('operation')]
+    operation2= ops[request.args.get('operation2')]
+    num_q=int(request.args.get('num_q'))
+    file=backtrack2.create_booklet(num_q,operation,operation2)
     return send_file(file, as_attachment=True)
 
 @app.route('/numberlines')
